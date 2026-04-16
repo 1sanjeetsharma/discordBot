@@ -130,3 +130,66 @@ https://github.com
 
 ---
 
+
+# Deployment Guide
+
+## Option 1: Deploy Express Server on Render
+
+1. Push the project to GitHub.
+2. Create a free account on Render.
+3. Click "New Web Service" and connect your GitHub repository.
+4. Use these settings:
+
+   * Build Command: `npm install`
+   * Start Command: `node index.js`
+5. Add the environment variables in Render:
+
+   * `BOT_TOKEN`
+   * `CLIENT_ID`
+   * `MONGODB_URI`
+   * `PORT`
+6. Deploy the service. Render will give you a URL such as:
+
+   ```
+   https://your-bot.onrender.com
+   ```
+
+## Option 2: Deploy MongoDB
+
+Use MongoDB Atlas:
+
+1. Create a cluster in MongoDB Atlas.
+2. Copy the connection string.
+3. Put it into your `.env` file as:
+
+   ```env
+   MONGODB_URI=mongodb+srv://...
+   ```
+
+## Option 3: Keep the Discord Bot Running
+
+Your Discord bot only stays alive while `node index.js` is running. Since Render keeps the server running 24/7, the bot will stay online automatically.
+
+## Important Change Before Deploying
+
+Inside your URL creation logic, replace:
+
+```js
+`http://localhost:3000/${shortId}`
+```
+
+with:
+
+```js
+`${process.env.BASE_URL}/${shortId}`
+```
+
+Then add this environment variable:
+
+```env
+BASE_URL=https://your-bot.onrender.com
+```
+
+Otherwise the bot will keep sending `localhost` links that only work on your own computer, a tiny paper airplane trying to cross the internet and splashing straight into the first puddle. 🌧️
+
+
